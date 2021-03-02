@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import { Row, Col, Collapse } from 'antd';
@@ -23,8 +23,8 @@ import logo_w from './images/logo_w.png';
 import facebook from './images/facebook.png';
 import twitter from './images/twitter.png';
 import insta from './images/insta.png';
-import Marquee from 'react-fast-marquee';
 import Ticker from 'react-ticker';
+import { device } from './globalAsset/breakpoints';
 
 const { Panel } = Collapse;
 
@@ -45,7 +45,6 @@ const slidingText = [
   'Growth',
   'Market Validation',
 ];
-
 
 const FAQLinkArray = [
   { text: 'Generals', isActive: true },
@@ -95,6 +94,7 @@ function App() {
   const [secondDivPos, setSecondDivPos] = React.useState(
     secondDivRef?.current?.getBoundingClientRect()?.top
   );
+  const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   const leftDivRef = React.useRef();
 
   React.useLayoutEffect(() => {
@@ -104,18 +104,11 @@ function App() {
         (invisibleDivRefCurrent.getBoundingClientRect().top /
           window.innerHeight) *
         100;
-      console.log('real', perce);
-      console.log('perce', 100 - perce);
-      console.log('oppo', perce - 100);
-      console.log(leftDivRef.current.getBoundingClientRect().right);
-      console.log(leftDivRef.current.getBoundingClientRect().width);
 
       if (perce >= 99) {
         setMagicNumber(100 - perce);
         setOppoMagicNumber(perce - 100);
       }
-
-      /*    setSecondDivPos(secondDivRef.current.getBoundingClientRect().top) */
     });
 
     return () =>
@@ -131,6 +124,28 @@ function App() {
         }
       });
   }, []);
+
+  useEffect(() => {
+    window.addEventListener('load', () => {
+      setScreenWidth(window.innerWidth);
+    });
+
+    return () =>
+      window.removeEventListener('load', () => {
+        setScreenWidth(window.innerWidth);
+      });
+  });
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setScreenWidth(window.innerWidth);
+    });
+
+    return () =>
+      window.removeEventListener('resize', () => {
+        setScreenWidth(window.innerWidth);
+      });
+  });
 
   const onFAQClick = () => {};
 
@@ -164,6 +179,9 @@ function App() {
   Once you are on-boarded you will be set up with initial documentation and paired with an advisor. You'll discuss your plans with your advisor and set up bi-weekly 30 - 45 minute sessions for check-ins, progress updates, and advisory support. This can take between 4 to 12 weeks where we hope to get you ready for your next major phase.
 `;
 
+  const slidingTextArr = slidingText.map((item, index) => {
+    return <span>{item}</span>;
+  });
   return (
     <>
       {/* START OF FIRST SEGMENT */}
@@ -184,8 +202,8 @@ function App() {
               <StyledArrow src={arrowDown} />
             </div>
           </StyledHeader>
-          <div style={{ height: 'fit-content', marginTop: '100px' }}>
-            <Ticker offset='run-in' speed={15}>
+          <div style={{ marginTop: '100px' }}>
+            <Ticker offset='run-in' speed={15} mode='smooth'>
               {({ index }) => (
                 <>
                   <StyledSlideText>
@@ -202,8 +220,8 @@ function App() {
       {/* END OF FIRST SEGMENT */}
       {/* START OF SECOND SEGMENT */}
       <Row ref={secondDivRef}>
-        <Col sm={{ span: 24 }}>
-          <StyledSecondDiv animate={secondDivPos <= 0}>
+        <Col xs={{ span: 24 }}>
+          <StyledSecondDiv>
             <div>
               <h4>WHO WE ARE</h4>
               <div>
@@ -228,10 +246,10 @@ function App() {
       {/* END OF SECOND SEGMENT */}
       {/* START OF THIRD SEGMENT */}
       <Row>
-        <Col span={12}>
+        <Col xs={{ span: 24 }} lg={{ span: 12 }}>
           <StyledThirdSegment
             ref={leftDivRef}
-            style={{ transform: `translateX(${magicNumber}%)` }}
+            style={{ transform: screenWidth >= 1024 && `translateX(${magicNumber}%)` }}
             animate={secondDivPos <= 0}
           >
             <div>
@@ -245,9 +263,9 @@ function App() {
             </div>
           </StyledThirdSegment>
         </Col>
-        <Col span={12}>
+        <Col xs={{ span: 24 }} lg={{ span: 12 }}>
           <StyledThirdSegment2
-            style={{ transform: `translateX(${oppoMagicNumber}%)` }}
+            style={{ transform: screenWidth >= 1024 && `translateX(${oppoMagicNumber}%)` }}
           >
             <div>
               <div>
@@ -262,9 +280,11 @@ function App() {
         </Col>
       </Row>
       {/* INVISIBLE */}
-      <Row>
-        <StyledInvisible span={24}></StyledInvisible>
-      </Row>
+      {screenWidth >= 1024 && (
+        <Row>
+          <StyledInvisible span={24}></StyledInvisible>
+        </Row>
+      )}
       {/* FOURTH SEGMENT */}
       <Row>
         <Col ref={invisibleDiv} span={24}>
@@ -415,7 +435,11 @@ const StyledHeaderCol = styled(Col)`
   background-image: url(${headerImage});
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 30vw 30vw;
+  background-size: 300px 300px;
+
+  @media ${device.laptop} {
+    background-size: 30vw 30vw;
+  }
 `;
 const StyledHeader = styled.header`
   width: 100%;
@@ -434,24 +458,38 @@ const StyledHeader = styled.header`
 `;
 
 const StyledLogo = styled.img`
-  width: 2.5vw;
+  width: 40px;
+
+  @media ${device.laptop} {
+    width: 2.5vw;
+  }
 `;
 
 const StyledHeaderTextDiv = styled.div`
   width: 100%;
-  text-align: center;
+  text-align: left;
   color: #03284a;
   font-family: recoleta;
   flex-basis: 50%;
+  word-wrap: break-word;
+  word-break: break-word;
+  padding: 0px 20px;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 
   & span {
     font-weight: 900;
+    display: block;
   }
 
   & h1 {
     font-weight: 400;
-    font-size: 173px;
-    margin-bottom: 0px;
+    font-size: 90px;
+    line-height: 80px;
+
+    margin-bottom: 20px;
     margin-top: 0px;
     color: #03284a;
   }
@@ -465,10 +503,30 @@ const StyledHeaderTextDiv = styled.div`
       font-weight: bolder;
     }
   }
+
+  @media ${device.tablet} {
+    & span {
+      display: inline;
+    }
+  }
+
+  @media ${device.laptop} {
+    text-align: center;
+    padding: 0px 0px;
+    & h1 {
+      font-size: 173px;
+      line-height: normal;
+      margin-bottom: 0px;
+    }
+
+    & span {
+      display: inline;
+    }
+  }
 `;
 
 const StyledArrow = styled.img`
-  width: 2vw;
+  width: 20px;
   position: relative;
 
   animation-name: arrowBounce;
@@ -494,6 +552,10 @@ const StyledArrow = styled.img`
       top: 0px;
     }
   }
+
+  @media ${device.laptop} {
+    width: 2vw;
+  }
 `;
 
 // SECOND DIV
@@ -501,27 +563,25 @@ const StyledArrow = styled.img`
 const StyledSecondDiv = styled.div`
   color: #ffe6d2;
   background-color: #091348;
-  height: 100vh;
-  text-align: center;
+  min-height: 100vh;
+  text-align: left;
   display: grid;
   place-items: center;
-  /*  position:${(props) => (props.animate ? 'fixed' : 'relative')};
-  top:${(props) => props.animate && '0px'};
-  z-index: -1; */
   width: 100%;
 
   & > div {
-    height: 70%;
+    min-height: 70%;
     ${getCenter({
       flexDirection: 'column',
       justifyContent: 'space-between',
+      flexWrap: 'no-wrap',
     })};
 
     & div {
       & h1 {
         font-weight: 900;
         font-family: recoleta;
-        font-size: 60px;
+        font-size: 30px;
         width: 80vw;
         margin: 0px;
         padding: 0px;
@@ -533,9 +593,9 @@ const StyledSecondDiv = styled.div`
         font-family: ${fontFamily.inter};
         font-weight: 400;
         font-size: 24px;
-        width: 70vw;
+        width: 90vw;
         margin: 50px auto 0 auto;
-        text-align: center;
+        text-align: left;
       }
     }
   }
@@ -543,6 +603,33 @@ const StyledSecondDiv = styled.div`
   & h4 {
     margin: 0;
     color: #ffe6d2;
+    font-size: 13px;
+  }
+
+  @media ${device.laptop} {
+    text-align: center;
+    & > div {
+      height: 70%;
+      & div {
+        & h1 {
+          font-size: 4.2vw;
+        }
+
+        & p {
+          font-family: ${fontFamily.inter};
+          font-weight: 400;
+          font-size: 1.8vw;
+          width: 70vw;
+          margin: 50px auto 0 auto;
+          text-align: center;
+        }
+      }
+    }
+    & h4 {
+      margin: 0;
+      color: #ffe6d2;
+      font-size: 0.9vw;
+    }
   }
 `;
 
@@ -550,13 +637,12 @@ const StyledButton = styled.button`
   background-color: #ffe6d2;
   color: #161c2d;
   border: none;
-  /*  width: 20vw; */
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 13px;
-  width: 16vw;
+  width: 100%;
   font-family: ${fontFamily.inter};
   font-weight: 700;
   border-radius: 50px;
@@ -565,9 +651,23 @@ const StyledButton = styled.button`
   justify-content: center;
   text-transform: uppercase;
   cursor: pointer;
+  margin-top: 40px;
 
   &:focus {
     outline: none;
+  }
+
+  @media ${device.tablet} {
+    width: 40vw;
+  }
+  @media ${device.laptop} {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 16vw;
+    font-size: 0.9vw;
+    margin-top: 0px;
   }
 `;
 
@@ -584,11 +684,8 @@ const StyledThirdSegment = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  position: fixed;
-  top: 0;
-  width: 50vw;
-
-  /* left: ${(props) => props.animate && '50vw'}; */
+ 
+  width: 100vw;
 
   & > div {
     text-align: center;
@@ -601,6 +698,7 @@ const StyledThirdSegment = styled.div`
       ${getCenter({
         flexDirection: 'column',
         justifyContent: 'space-between',
+        flexWrap: 'no-wrap',
       })};
     }
 
@@ -622,6 +720,17 @@ const StyledThirdSegment = styled.div`
       line-height: 72px;
     }
   }
+
+  @media ${device.laptop} {
+    width: 50vw;
+    position: fixed;
+    top: 0;
+    & > div {
+      & div:first-child {
+        flex-wrap: wrap;
+      }
+    }
+  }
 `;
 
 const StyledThirdSegment2 = styled.div`
@@ -634,9 +743,7 @@ const StyledThirdSegment2 = styled.div`
   flex-direction: column;
   justify-content: flex-end;
 
-  position: fixed;
-  top: 0;
-  width: 50vw;
+  width: 100vw;
 
   & > div {
     text-align: center;
@@ -649,6 +756,7 @@ const StyledThirdSegment2 = styled.div`
       ${getCenter({
         flexDirection: 'column',
         justifyContent: 'space-between',
+        flexWrap: 'no-wrap',
       })};
     }
 
@@ -670,11 +778,27 @@ const StyledThirdSegment2 = styled.div`
       line-height: 72px;
     }
   }
+
+  @media ${device.laptop} {
+    position: fixed;
+    top: 0;
+    width: 50vw;
+
+    & > div {
+      & div:first-child {
+        flex-wrap: wrap;
+      }
+    }
+  }
 `;
 
 const StyledHeart = styled.img`
-  width: 55%;
+  width: 80%;
   height: auto;
+
+  @media ${device.tablet} {
+    width: 55%;
+  }
 `;
 
 const StyledHeartDiv = styled.div`
@@ -702,6 +826,8 @@ const StyledFourthSegment = styled.div`
     font-size: 54px;
     line-height: 72px;
     margin: 0 auto;
+    margin-left: 10px;
+    margin-right: 10px;
 
     & span {
       color: #d8fbdf;
@@ -722,17 +848,40 @@ const StyledFourthSegment = styled.div`
     margin: 0 auto;
     margin-top: 50px;
   }
+
+  @media ${device.laptop} {
+    & > h1 {
+      font-size: 3.8vw;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    & > h5 {
+      font-size: 1.1vw;
+    }
+  }
 `;
 
 const StyledCard = styled.div`
-  flex-basis: 32%;
+  flex-basis: 100%;
   background-color: #15263c;
   border-radius: 20px;
-  padding: 30px 37px 30px 37px;
+  padding: 30px 10px 30px 10px;
   text-align: left;
   color: #fff;
-  height: 65vh;
+  height: 70vh;
+
   margin-bottom: 20px;
+
+  @media ${device.tablet} {
+    padding: 30px 37px 30px 37px;
+  }
+
+  @media ${device.laptop} {
+    padding: 30px 37px 30px 37px;
+    flex-basis: 32%;
+    height: 65vh;
+  }
 `;
 
 const StyledCardHeader = styled.div`
@@ -744,6 +893,12 @@ const StyledCardHeader = styled.div`
     font-size: 30px;
     color: #fff;
     margin: 10px;
+  }
+
+  @media ${device.laptop} {
+    & > p:first-child {
+      font-size: 2vw;
+    }
   }
 `;
 const StyledCardFooter = styled.div`
@@ -759,8 +914,18 @@ const StyledCardFooter = styled.div`
   & p {
     font-family: ${fontFamily.inter};
     font-weight: 400;
-    font-size: 18px;
+    font-size: 16px;
     color: #707f90;
+  }
+
+  @media ${device.laptop} {
+    & > h2 {
+      font-size: 1.6vw;
+    }
+
+    & p {
+      font-size: 1.25vw;
+    }
   }
 `;
 const StyledCardImageDiv = styled.div`
@@ -773,16 +938,17 @@ const StyledCardImage = styled.img`
 `;
 
 const SpecialCard = styled.div`
-  flex-basis: 32%;
+  flex-basis: 100%;
   background-image: url(${img7});
   background-position: center;
   background-size: cover;
   background-color: #ebf1c7;
   border-radius: 20px;
-  padding: 30px 37px 30px 37px;
+  padding: 30px 10px 30px 10px;
   text-align: left;
   color: #fff;
-  height: 65vh;
+  height: 70vh;
+ /*  margin: 0 auto; */
   margin-bottom: 20px;
   display: flex;
   align-items: flex-end;
@@ -790,7 +956,7 @@ const SpecialCard = styled.div`
   & div {
     & > h1 {
       font-family: recoleta;
-      font-size: 40px;
+      font-size: 32px;
       font-weight: 400;
       margin-top: auto;
 
@@ -800,10 +966,30 @@ const SpecialCard = styled.div`
     }
 
     & p {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 400;
       font-family: ${fontFamily.inter};
       color: #707973;
+    }
+  }
+
+  @media ${device.tablet} {
+    padding: 30px 37px 30px 37px;
+  }
+
+  @media ${device.laptop} {
+    height: 65vh;
+    flex-basis: 32%;
+    padding: 30px 37px 30px 37px;
+
+    & div {
+      & > h1 {
+        font-size: 2.7vw;
+      }
+
+      & p {
+        font-size: 1.25vw;
+      }
     }
   }
 `;
@@ -821,7 +1007,7 @@ const StyledFiftSegment = styled.div`
   padding-top: 60px;
 
   & > div {
-    width: 60%;
+    width: 100%;
     margin: 0 auto;
     padding-bottom: 30px;
 
@@ -832,6 +1018,12 @@ const StyledFiftSegment = styled.div`
       color: #0c1b2d;
       text-align: center;
       margin-top: 30px;
+    }
+  }
+
+  @media ${device.laptop} {
+    & > div {
+      width: 60%;
     }
   }
 `;
@@ -859,18 +1051,33 @@ const StyledLink = styled.div`
     margin: 0px;
     font-weight: 500;
   }
+
+  @media ${device.laptop} {
+    font-size: 1.1vw;
+  }
 `;
 
 const StyledPanel = styled(Panel)`
   background-color: ${(props) => (props.isActive ? '#fff' : 'transparent')};
   border-radius: 20px !important;
   margin-bottom: ${(props) => (props.isActive ? '10px' : '0')};
+  margin-left: 10px;
+  margin-right: 10px;
+
+  @media ${device.laptop} {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 `;
 
 const StyledPanelHeader = styled.h1`
   font-family: recoleta;
   font-size: 18px;
   color: #272e35;
+
+  @media ${device.laptop} {
+    font-size: 1.25vw;
+  }
 `;
 
 const StyledPanelText = styled.p`
@@ -878,7 +1085,13 @@ const StyledPanelText = styled.p`
   font-size: 16px;
   font-weight: 400;
   color: #6e757c;
+
+  @media ${device.laptop} {
+    font-size: 1.1vw;
+  }
 `;
+
+// FOOTER
 const StyledFooter = styled.div`
   width: 100%;
   background-color: #0c1b2d;
@@ -886,14 +1099,26 @@ const StyledFooter = styled.div`
   padding-bottom: 40px;
 
   & > div {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
+  }
+
+  @media ${device.laptop} {
+    & > div {
+      width: 80%;
+      margin: 0 auto;
+    }
   }
 `;
 const StyledFooterLinkDiv = styled.div`
-  ${getCenter({ justifyContent: 'space-between' })};
-  width: 65%;
+  ${getCenter({ justifyContent: 'space-between', flexDirection: 'column' })};
+  width: 100%;
   margin: 0 auto;
+
+  @media ${device.laptop} {
+    ${getCenter({ justifyContent: 'space-between' })};
+    width: 65%;
+  }
 `;
 
 const StyledFooterLink = styled.a`
@@ -901,10 +1126,16 @@ const StyledFooterLink = styled.a`
   font-size: 16px;
   color: #fff;
   opacity: 0.5;
+  margin-bottom: 10px;
   /*   margin-right: 20px; */
 
   &:hover {
     color: #fff;
+  }
+
+  @media ${device.laptop} {
+    font-size: 1.1vw;
+    margin-bottom: 0px;
   }
 `;
 
@@ -921,23 +1152,43 @@ const StyledUnderLine = styled.div`
   margin-bottom: 40px;
 `;
 const StyledContactDiv = styled.div`
-  ${getCenter({ justifyContent: 'space-between' })};
-  width: 80%;
+  ${getCenter({ justifyContent: 'space-between', flexDirection: 'column' })};
+  width: 100%;
   margin: 0 auto;
 
   & p {
-    margin-bottom: 0px;
+    margin-bottom: 10px;
     color: #fff;
+    text-align: center;
+    font-size: 14px;
 
     & span {
       opacity: 0.3;
     }
   }
+
+  @media ${device.laptop} {
+    ${getCenter({ justifyContent: 'space-between' })};
+    width: 80%;
+
+    & p {
+      margin-bottom: 0px;
+      text-align: center;
+
+      & span {
+        opacity: 0.3;
+      }
+    }
+  }
 `;
 
 const StyledSocialMedias = styled.div`
-  ${getCenter({ justifyContent: 'flex-end' })};
+  ${getCenter()};
   width: fit-content;
+
+  @media ${device.laptop} {
+    ${getCenter({ justifyContent: 'flex-end' })};
+  }
 `;
 
 const StyledSocial = styled.img`
@@ -974,5 +1225,7 @@ const StyledSlideText = styled.p`
   font-weight: 500;
   color: #0c1b2d;
   font-size: 18px;
+  width: 100%;
+  white-space: nowrap;
 `;
 export default App;
