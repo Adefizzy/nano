@@ -195,7 +195,7 @@ function App() {
                   <span>Nanō</span>traction
                 </h1>
                 <p>
-                  <span>Yes, We’re ridiculously early</span> - before traction -
+                  <span>Yes, We’re super early</span> - before traction -
                   before product market fit
                 </p>
               </StyledHeaderTextDiv>
@@ -203,7 +203,7 @@ function App() {
             </div>
           </StyledHeader>
           <div style={{ marginTop: '100px' }}>
-            <Ticker offset='run-in' speed={15} mode='smooth'>
+            <Ticker offset='run-in' speed={10} mode='smooth'>
               {({ index }) => (
                 <>
                   <StyledSlideText>
@@ -568,6 +568,7 @@ const StyledSecondDiv = styled.div`
   display: grid;
   place-items: center;
   width: 100%;
+  padding-top: 40px;
 
   & > div {
     min-height: 70%;
@@ -604,10 +605,12 @@ const StyledSecondDiv = styled.div`
     margin: 0;
     color: #ffe6d2;
     font-size: 13px;
+    margin-bottom: 30px;
   }
 
   @media ${device.laptop} {
     text-align: center;
+    padding-top: 0px;
     & > div {
       height: 70%;
       & div {
@@ -652,6 +655,7 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   cursor: pointer;
   margin-top: 40px;
+  margin-bottom: 40px;
 
   &:focus {
     outline: none;
@@ -668,6 +672,7 @@ const StyledButton = styled.button`
     width: 16vw;
     font-size: 0.9vw;
     margin-top: 0px;
+    margin-bottom: 0px;
   }
 `;
 
@@ -866,7 +871,7 @@ const StyledCard = styled.div`
   flex-basis: 100%;
   background-color: #15263c;
   border-radius: 20px;
-  padding: 30px 10px 30px 10px;
+  padding: 30px 15px 30px 20px;
   text-align: left;
   color: #fff;
   height: 70vh;
@@ -944,7 +949,7 @@ const SpecialCard = styled.div`
   background-size: cover;
   background-color: #ebf1c7;
   border-radius: 20px;
-  padding: 30px 10px 30px 10px;
+  padding: 30px 15px 30px 20px;
   text-align: left;
   color: #fff;
   height: 70vh;

@@ -1,5 +1,6 @@
 {
-  "name": "arrested",
+  "name": "nanotraction",
+  "homepage": "http://nanotraction.co",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
