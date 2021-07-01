@@ -46,9 +46,31 @@ const slidingText = [
   'Market Validation',
 ];
 
+const text = (
+  <div>
+    <ul>
+      <li >Fill a form</li>
+      <li>Get scheduled for an interview</li>
+      <li>Sign terms and commit to a plan designed by you and agreed by us</li>
+      <li>Bi-weekly check-ins for progress monitoring/updates, advisory discussions, and support (8 to 12 weeks)</li>
+      <li>Other details</li>
+      <ul>
+        <li>No major traction needed</li>
+        <li>No mandatory demo day</li>
+      </ul>
+    </ul>
+  </div>
+)
+
+const text2 = `
+  - First, you would have to apply via our website. We typically go through every application and generally get back within 1-2 weeks
+  If we are looking to move forward with you, we will invite you for a 30-45 minute call to learn more about you and what you're working on. About a week after this we will get back to you with our decision and possible next steps for on-boarding.
+  Once you are on-boarded you will be set up with initial documentation and paired with an advisor. You'll discuss your plans with your advisor and set up bi-weekly 30 - 45 minute sessions for check-ins, progress updates, and advisory support. This can take between 4 to 12 weeks where we hope to get you ready for your next major phase.
+`;
+
 const FAQLinkArray = [
-  { text: 'Generals', isActive: true },
-  { text: 'Offerings', isActive: false },
+  { text: 'General', isActive: true , description: text2},
+  { text: 'Process', isActive: false , description: text},
   { text: 'Deals', isActive: false },
 ];
 const cartObj = [
@@ -56,13 +78,14 @@ const cartObj = [
     image: img2,
     heading: 'Early Funding',
     message:
-      'Very Early Round (pre-traction or family and friends round). Check size between $5-$15k',
+      /* 'Very Early Round (pre-traction or family and friends round). Check size between $5-$15k', */
+      'Very Early Round (pre-traction or family and friends round). Check sizes up to $15k'
   },
   {
     image: img3,
     heading: 'Advisory & Mentorship',
-    message:
-      'Very Early Round (pre-traction or family and friends round). Check size between $5-$15k',
+    message: 'Hands-on guidance around product, people & operations, tech, business, marketing, customer acquisition & support, intro to legal experts and service providers, etc'
+      /* 'Very Early Round (pre-traction or family and friends round). Check size between $5-$15k', */
   },
   {
     image: img4,
@@ -73,8 +96,8 @@ const cartObj = [
   {
     image: img5,
     heading: 'Community & Visibility',
-    message:
-      'Direct Intros to other founders and ecosystem players, Partners, Corporates, etc',
+    message: 'Direct intros to other founders and ecosystem players, partners, corporates, etc'
+     /*  'Direct Intros to other founders and ecosystem players, Partners, Corporates, etc', */
   },
   {
     image: img1,
@@ -147,11 +170,23 @@ function App() {
       });
   });
 
-  const onFAQClick = () => {};
+  const onFAQClick = item => () => {
+    const updatedFAQ =  [...FAQLink].map(faq => {
+      if(faq.text === item.text){
+        faq.isActive = true;
+        return faq;
+      }
+
+      faq.isActive = false;
+      return faq;
+    });
+
+    setFAQLink(updatedFAQ);
+  };
 
   const FAQLinkList = FAQLink.map((item, index) => {
     return (
-      <StyledLink isActive={item.isActive} onClick={onFAQClick}>
+      <StyledLink isActive={item.isActive} onClick={onFAQClick(item)}>
         <p>{item.text}</p>
       </StyledLink>
     );
@@ -173,11 +208,13 @@ function App() {
     setActivePanel(args);
   };
 
-  const text = `
+  const text2 = `
   - First, you would have to apply via our website. We typically go through every application and generally get back within 1-2 weeks
   If we are looking to move forward with you, we will invite you for a 30-45 minute call to learn more about you and what you're working on. About a week after this we will get back to you with our decision and possible next steps for on-boarding.
   Once you are on-boarded you will be set up with initial documentation and paired with an advisor. You'll discuss your plans with your advisor and set up bi-weekly 30 - 45 minute sessions for check-ins, progress updates, and advisory support. This can take between 4 to 12 weeks where we hope to get you ready for your next major phase.
 `;
+
+const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign terms and commit to a plan designed by you and agreed by us <br/> - Bi-weekly check-ins for progress monitoring/updates, advisory discussions, and support (8 to 12 weeks) <br/> - Other details <br/>  - No major traction needed <br/> - No mandatory demo day'
 
   const slidingTextArr = slidingText.map((item, index) => {
     return <span>{item}</span>;
@@ -226,8 +263,11 @@ function App() {
               <h4>WHO WE ARE</h4>
               <div>
                 <h1>If you’re feeling formal, call us the</h1>
-                <h1>“super early -stage venture capital firm”</h1>
-                <p>
+                <h1>“super early-stage angel investors and advisors”</h1>
+                {/* <h1>
+                  If you’re feeling formal, call us the “super early-stage angel investors and advisors”
+                </h1> */}
+                <p style={{marginBottom: '25px'}}>
                   Our aim is to help and guide you to better articulate, test
                   and validate your idea, get better traction and get you on the
                   right track faster in order to get the best early/seed stage
@@ -299,12 +339,14 @@ function App() {
               <SpecialCard>
                 <div>
                   <h1>
-                    Apply to
-                    <br /> <span>Nanotraction</span>
+                    {/* Apply to
+                    <br /> <span>Nanotraction</span> */}
+                     Get Early Access<br/>to <span>Nanotraction</span>
                   </h1>
                   <p>
-                    We also help founders build the credibility they need and
-                    much more.{' '}
+                    {/* We also help founders build the credibility they need and
+                    much more.{' '} */}
+                   We help founders build the credibility they need and much more
                   </p>
                   <StyledArrowLeft src={arrowLeft} />
                 </div>
@@ -335,7 +377,7 @@ function App() {
                 header={<StyledPanelHeader>How do I apply?</StyledPanelHeader>}
                 key='1'
               >
-                <StyledPanelText>{text}</StyledPanelText>
+                <StyledPanelText>{FAQLink.find(item => item.isActive).description}</StyledPanelText>
               </StyledPanel>
               <StyledPanel
                 isActive={activePanel.some((item) => item === 2)}
@@ -346,7 +388,7 @@ function App() {
                 }
                 key='2'
               >
-                <StyledPanelText>{text}</StyledPanelText>
+                <StyledPanelText>{FAQLink.find(item => item.isActive).description}</StyledPanelText>
               </StyledPanel>
               <StyledPanel
                 isActive={activePanel.some((item) => item === 3)}
@@ -357,7 +399,7 @@ function App() {
                 }
                 key='3'
               >
-                <StyledPanelText>{text}</StyledPanelText>
+                <StyledPanelText>{FAQLink.find(item => item.isActive).description}</StyledPanelText>
               </StyledPanel>
               <StyledPanel
                 isActive={activePanel.some((item) => item === 4)}
@@ -1048,6 +1090,7 @@ const StyledLink = styled.div`
   background-color: ${(props) => (props.isActive ? '#fff' : 'transparent')};
   border-radius: 40px;
   padding: 8px 20px;
+  cursor: pointer;
 
   & p {
     color: #091348;
