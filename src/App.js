@@ -71,7 +71,7 @@ const text2 = `
 const FAQLinkArray = [
   { text: 'General', isActive: true , description: text2},
   { text: 'Process', isActive: false , description: text},
-  { text: 'Deals', isActive: false },
+  { text: 'Portfolio', isActive: false },
 ];
 const cartObj = [
   {
@@ -223,7 +223,7 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
     <>
       {/* START OF FIRST SEGMENT */}
       <Row>
-        <StyledHeaderCol sm={{ span: 24 }}>
+        <StyledHeaderCol sm={{ span: 24 }} id='home'>
           <StyledHeader>
             <div>
               <StyledLogo src={logo} alt='logo' />
@@ -258,7 +258,7 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
       {/* START OF SECOND SEGMENT */}
       <Row ref={secondDivRef}>
         <Col xs={{ span: 24 }}>
-          <StyledSecondDiv>
+          <StyledSecondDiv id='AboutUs'>
             <div>
               <h4>WHO WE ARE</h4>
               <div>
@@ -292,30 +292,37 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
             style={{ transform: screenWidth >= 1024 && `translateX(${magicNumber}%)` }}
             animate={secondDivPos <= 0}
           >
-            <div>
-              <div>
-                <h5>Our DNA</h5>
+            <h5>Our DNA</h5>
                 <h1>We’re Makers at Heart</h1>
+                <h5 style={{visibility: 'hidden'}}>Our DNA</h5>
+                <h5 style={{visibility: 'hidden'}}>Our DNA</h5>
+           {/*  <div> 
+              <div>
+                
               </div>
               <StyledHeartDiv>
                 <StyledHeart src={heart} />
-              </StyledHeartDiv>
-            </div>
+              </StyledHeartDiv> 
+            </div> */}
           </StyledThirdSegment>
         </Col>
         <Col xs={{ span: 24 }} lg={{ span: 12 }}>
           <StyledThirdSegment2
             style={{ transform: screenWidth >= 1024 && `translateX(${oppoMagicNumber}%)` }}
           >
-            <div>
-              <div>
+
                 <h5 style={{ visibility: 'hidden' }}>Our DNA</h5>
-                <h1>Game-changing Execution Strategies</h1>
+                <h1>Game-changing Execution Strategies</h1>   
+                <h5 style={{ visibility: 'hidden' }}>Our DNA</h5>
+                <h5 style={{ visibility: 'hidden' }}>Our DNA</h5>  
+           {/*  <div>
+              <div>
+               
               </div>
               <StyledHeartDiv style={{ visibility: 'hidden' }}>
                 <StyledHeart src={heart} />
               </StyledHeartDiv>
-            </div>
+            </div> */}
           </StyledThirdSegment2>
         </Col>
       </Row>
@@ -348,7 +355,7 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
                     much more.{' '} */}
                    We help founders build the credibility they need and much more
                   </p>
-                  <StyledArrowLeft src={arrowLeft} />
+                  <a  href='https://www.notion.so/yewiedewie/Early-Access-Details-27ff09ad49a54d35997ea0cc995eb83a' ><StyledArrowLeft  src={arrowLeft} /></a>
                 </div>
               </SpecialCard>
             </div>
@@ -423,8 +430,8 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
           <StyledFooter>
             <div>
               <StyledFooterLinkDiv>
-                <StyledFooterLink>Home</StyledFooterLink>
-                <StyledFooterLink>About us</StyledFooterLink>
+                <StyledFooterLink href='#home'>Home</StyledFooterLink>
+                <StyledFooterLink href='#AboutUs'>About us</StyledFooterLink>
                 <StyledFooterLogo src={logo_w} />
                 <StyledFooterLink>Apply now</StyledFooterLink>
                 <StyledFooterLink>Contacts</StyledFooterLink>
@@ -432,12 +439,12 @@ const text3 ='Fill a form <br/> - Get scheduled for an interview <br/> -Sign ter
               <StyledUnderLine />
               <StyledContactDiv>
                 <p>
-                  <span>For other questions, you can email us directly at</span>{' '}
-                  hello@nanotraction.co <span>or</span> nanotraction@gmail.com
+                  <span>For other questions, you can email us directly at </span>{' '}
+                  Email: or nanotraction@gmail.com <span>or</span> hello@nanotraction.co
                 </p>
                 <StyledSocialMedias>
-                  <StyledSocial src={facebook} />
-                  <StyledSocial src={twitter} />
+                  {/* <StyledSocial src={facebook} /> */}
+                  <a href='https://twitter.com/nanotraction' rel="noopener noreferrer" target='_blank'><StyledSocial src={twitter} /></a>
                   <StyledSocial src={insta} />
                 </StyledSocialMedias>
               </StyledContactDiv>
@@ -726,35 +733,26 @@ const StyledIoIosText = styled(IoIosText)`
 
 // ThIRD SEGMENT
 const StyledThirdSegment = styled.div`
+  background-image: url(${heart});
+  background-repeat: no-repeat;
+  background-position: center 150%;
   background-color: #eef6fe;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
- 
+  justify-content: space-between;
   width: 100vw;
+  text-align: center;
+  padding-top: 10vh;
+  
 
-  & > div {
-    text-align: center;
-    height: 80vh;
-    margin-top: auto;
-    overflow: hidden;
-
-    & div:first-child {
-      height: 35%;
-      ${getCenter({
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        flexWrap: 'no-wrap',
-      })};
-    }
-
-    & h5 {
+  & h5 {
       font-family: ${fontFamily.inter};
       text-transform: uppercase;
       font-size: 16px;
       font-weight: 700;
       color: #141003;
+
     }
 
     & h1 {
@@ -766,8 +764,6 @@ const StyledThirdSegment = styled.div`
       margin: 0 auto;
       line-height: 72px;
     }
-  }
-
   @media ${device.laptop} {
     width: 50vw;
     position: fixed;
@@ -780,34 +776,14 @@ const StyledThirdSegment = styled.div`
   }
 `;
 
-const StyledThirdSegment2 = styled.div`
+const StyledThirdSegment2 = styled(StyledThirdSegment)`
   background-image: url(${bg1});
   background-position: center;
-  background-size: contain;
-
+  background-size: cover;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-
   width: 100vw;
 
-  & > div {
-    text-align: center;
-    height: 80vh;
-    margin-top: auto;
-    overflow: hidden;
-
-    & div:first-child {
-      height: 35%;
-      ${getCenter({
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        flexWrap: 'no-wrap',
-      })};
-    }
-
-    & h5 {
+  & h5 {
       font-family: ${fontFamily.inter};
       text-transform: uppercase;
       font-size: 16px;
@@ -824,7 +800,8 @@ const StyledThirdSegment2 = styled.div`
       margin: 0 auto;
       line-height: 72px;
     }
-  }
+
+ 
 
   @media ${device.laptop} {
     position: fixed;
@@ -917,6 +894,7 @@ const StyledCard = styled.div`
   text-align: left;
   color: #fff;
   height: 70vh;
+  overflow: auto;
 
   margin-bottom: 20px;
 
@@ -1203,6 +1181,7 @@ const StyledContactDiv = styled.div`
   ${getCenter({ justifyContent: 'space-between', flexDirection: 'column' })};
   width: 100%;
   margin: 0 auto;
+ /* border: 1px solid red; */
 
   & p {
     margin-bottom: 10px;
@@ -1216,7 +1195,7 @@ const StyledContactDiv = styled.div`
   }
 
   @media ${device.laptop} {
-    ${getCenter({ justifyContent: 'space-between' })};
+    /* ${getCenter({ justifyContent: 'space-between' })}; */
     width: 80%;
 
     & p {
@@ -1231,16 +1210,22 @@ const StyledContactDiv = styled.div`
 `;
 
 const StyledSocialMedias = styled.div`
-  ${getCenter()};
-  width: fit-content;
+  /* ${getCenter()}; */
+  /* width: fit-content; */
+  margin-top: 20px;
+  text-align: center;
 
   @media ${device.laptop} {
-    ${getCenter({ justifyContent: 'flex-end' })};
+    /* ${getCenter({ justifyContent: 'flex-end' })}; */
+  }
+
+  & a {
+    margin-left: 20px;
   }
 `;
 
 const StyledSocial = styled.img`
-  width: 7%;
+   width: 10%;
   margin-left: 20px;
 
   &:first-child {
